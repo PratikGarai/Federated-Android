@@ -1,10 +1,9 @@
 import socket
 import pickle
 import threading
-import pygad
 import numpy
 
-from libs import gann, nn
+from libs import gann, nn, pygad
 
 from config import data_inputs, data_outputs
 
