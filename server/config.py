@@ -1,5 +1,5 @@
 import numpy
-import gann
+import pygad
 
 model = None
 
@@ -17,9 +17,11 @@ num_classes = 2
 num_inputs = 2
 
 num_solutions = 6
-GANN_instance = gann.GANN(num_solutions=num_solutions,
-                                num_neurons_input=num_inputs,
-                                num_neurons_hidden_layers=[2],
-                                num_neurons_output=num_classes,
-                                hidden_activations=["relu"],
-                                output_activation="softmax")
+GANN_instance = pygad.gann.GANN(
+    num_solutions=num_solutions,
+    num_neurons_input=num_inputs,
+    num_neurons_hidden_layers=[2],
+    num_neurons_output=num_classes,
+    hidden_activations=["relu"],
+    output_activation="softmax"
+)
