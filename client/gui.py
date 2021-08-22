@@ -5,6 +5,8 @@ import kivy.uix.textinput
 import kivy.uix.boxlayout
 import socket
 
+from thread_handler import RecvThread
+
 class ClientApp(kivy.app.App):
 
     def __init__(self):
