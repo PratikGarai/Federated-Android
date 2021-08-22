@@ -2,8 +2,8 @@ import pickle
 import time
 import numpy
 import threading
-import nn
 
+from libs import nn
 from config import GANN_instance, model, data_inputs, data_outputs
 
 class SocketThread(threading.Thread):
@@ -95,6 +95,8 @@ class SocketThread(threading.Thread):
                 print("Replying to the Client.")
                 self.kivy_app.label.text = "Replying to the Client"
 
+                response = "no response"
+
                 if subject == "echo":
                     if model is None:
                         data = {"subject": "model", "data": GANN_instance}
@@ -118,8 +120,8 @@ class SocketThread(threading.Thread):
                     try:
                         GANN_instance = received_data["data"]
                         best_model_idx = received_data["best_solution_idx"]
-
                         best_model = GANN_instance.population_networks[best_model_idx]
+
                         if model is None:
                             model = best_model
                         else:
@@ -127,6 +129,7 @@ class SocketThread(threading.Thread):
                             error = numpy.sum(numpy.abs(predictions - data_outputs))
                             # In case a client sent a model to the server despite that the model error is 0.0. 
                             # In this case, no need to make changes in the model.
+
                             if error == 0:
                                 data = {"subject": "done", "data": None}
                                 response = pickle.dumps(data)
@@ -151,7 +154,7 @@ class SocketThread(threading.Thread):
                             response = pickle.dumps(data)
 
                     except BaseException as e:
-                        print("Error Decoding the Client's Data: {e}.\n")
+                        print(f"Error Decoding the Client's Data: {e}.\n")
                         self.kivy_app.label.text = "Error Decoding the Client's Data"
                 else:
                     response = pickle.dumps("Response from the Server")
