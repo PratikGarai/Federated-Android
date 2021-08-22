@@ -32,7 +32,8 @@ class SocketThread(threading.Thread):
                 data = self.connection.recv(self.buffer_size)
                 received_data += data
 
-                if data == b'': # Nothing received from the client.
+                # Nothing received from the client.
+                if data == b'': 
                     received_data = b""
                     # If still nothing received for a number of seconds specified by the recv_timeout 
                     # attribute, return with status 0 to close the connection.
@@ -83,14 +84,17 @@ class SocketThread(threading.Thread):
         received_data
     ):
         global GANN_instance, data_inputs, data_outputs, model
-        if (type(received_data) is dict):
-            if (("data" in received_data.keys()) and ("subject" in received_data.keys())):
-                subject = received_data["subject"]
-                print("Client's Message Subject is {subject}.".format(subject=subject))
-                self.kivy_app.label.text = "Client's Message Subject is {subject}".format(subject=subject)
 
+        if (type(received_data) is dict):
+
+            if (("data" in received_data.keys()) and ("subject" in received_data.keys())):
+
+                subject = received_data["subject"]
+                print(f"Client's Message Subject is {subject}.")
+                self.kivy_app.label.text = f"Client's Message Subject is {subject}"
                 print("Replying to the Client.")
                 self.kivy_app.label.text = "Replying to the Client"
+
                 if subject == "echo":
                     if model is None:
                         data = {"subject": "model", "data": GANN_instance}
@@ -107,8 +111,9 @@ class SocketThread(threading.Thread):
                     try:
                         response = pickle.dumps(data)
                     except BaseException as e:
-                        print("Error Encoding the Message: {msg}.\n".format(msg=e))
+                        print(f"Error Encoding the Message: {e}.\n")
                         self.kivy_app.label.text = "Error Encoding the Message"
+
                 elif subject == "model":
                     try:
                         GANN_instance = received_data["data"]
@@ -119,26 +124,24 @@ class SocketThread(threading.Thread):
                             model = best_model
                         else:
                             predictions = nn.predict(last_layer=model, data_inputs=data_inputs)
-    
                             error = numpy.sum(numpy.abs(predictions - data_outputs))
-    
-                            # In case a client sent a model to the server despite that the model error is 0.0. In this case, no need to make changes in the model.
+                            # In case a client sent a model to the server despite that the model error is 0.0. 
+                            # In this case, no need to make changes in the model.
                             if error == 0:
                                 data = {"subject": "done", "data": None}
                                 response = pickle.dumps(data)
                                 return
 
                             self.model_averaging(model, best_model)
-
                         # print(best_model.trained_weights)
                         # print(model.trained_weights)
 
                         predictions = nn.predict(last_layer=model, data_inputs=data_inputs)
-                        print("Model Predictions: {predictions}".format(predictions=predictions))
+                        print(f"Model Predictions: {predictions}")
 
                         error = numpy.sum(numpy.abs(predictions - data_outputs))
-                        print("Prediction Error = {error}".format(error=error))
-                        self.kivy_app.label.text = "Prediction Error = {error}".format(error=error)
+                        print(f"Prediction Error = {error}")
+                        self.kivy_app.label.text = f"Prediction Error = {error}"
 
                         if error != 0:
                             data = {"subject": "model", "data": GANN_instance}
@@ -148,7 +151,7 @@ class SocketThread(threading.Thread):
                             response = pickle.dumps(data)
 
                     except BaseException as e:
-                        print("Error Decoding the Client's Data: {msg}.\n".format(msg=e))
+                        print("Error Decoding the Client's Data: {e}.\n")
                         self.kivy_app.label.text = "Error Decoding the Client's Data"
                 else:
                     response = pickle.dumps("Response from the Server")
@@ -156,15 +159,19 @@ class SocketThread(threading.Thread):
                 try:
                     self.connection.sendall(response)
                 except BaseException as e:
-                    print("Error Sending Data to the Client: {msg}.\n".format(msg=e))
-                    self.kivy_app.label.text = "Error Sending Data to the Client: {msg}".format(msg=e)
+                    log = f"Error Sending Data to the Client: {e}.\n"
+                    print(log)
+                    self.kivy_app.label.text = log
 
             else:
-                print("The received dictionary from the client must have the 'subject' and 'data' keys available. The existing keys are {d_keys}.".format(d_keys=received_data.keys()))
+                print("The received dictionary from the client must have the 'subject' and 'data'\
+                     keys available. The existing keys are {received_data.keys()}.")
                 self.kivy_app.label.text = "Error Parsing Received Dictionary"
         else:
-            print("A dictionary is expected to be received from the client but {d_type} received.".format(d_type=type(received_data)))
-            self.kivy_app.label.text = "A dictionary is expected but {d_type} received.".format(d_type=type(received_data))
+            log = f"A dictionary is expected to be received from the \
+                client but {type(received_data)} received."
+            print(log)
+            self.kivy_app.label.text = log
 
 
     def run(self):
