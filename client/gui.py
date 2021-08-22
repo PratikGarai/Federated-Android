@@ -1,4 +1,8 @@
-import kivy
+import kivy.app
+import kivy.uix.button
+import kivy.uix.label
+import kivy.uix.textinput
+import kivy.uix.boxlayout
 
 class ClientApp(kivy.app.App):
 

@@ -1,4 +1,4 @@
-import nn
+from libs import nn
 
 def validate_network_parameters(num_neurons_input, 
                                 num_neurons_output, 
