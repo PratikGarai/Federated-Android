@@ -4,7 +4,7 @@ import numpy
 import threading
 import nn
 
-from server import GANN_instance, model, data_inputs, data_outputs
+from config import GANN_instance, model, data_inputs, data_outputs
 
 class SocketThread(threading.Thread):
 

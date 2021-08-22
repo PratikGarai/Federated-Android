@@ -1,8 +1,4 @@
-import kivy.app
-import kivy.uix.button
-import kivy.uix.label
-import kivy.uix.textinput
-import kivy.uix.boxlayout
+import kivy
 import socket
 
 from thread_handler import ListenThread
