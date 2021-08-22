@@ -14,7 +14,10 @@ class ServerApp(kivy.app.App):
         
 
     def create_socket(self, *args):
-        self.soc = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+        self.soc = socket.socket(
+            family=socket.AF_INET, 
+            type=socket.SOCK_STREAM
+        )
         self.label.text = "Socket Created"
 
         self.create_socket_btn.disabled = True
@@ -53,16 +56,17 @@ class ServerApp(kivy.app.App):
 
 
     def build(self):
+
         self.create_socket_btn = kivy.uix.button.Button(
             text="Create Socket", 
             disabled=False
         )
+        self.create_socket_btn.bind(on_press=self.create_socket)
 
         self.server_ip = kivy.uix.textinput.TextInput(
             hint_text="IPv4 Address", 
             text="localhost"
         )
-
         self.server_port = kivy.uix.textinput.TextInput(
             hint_text="Port Number", 
             text="10000"
@@ -71,7 +75,6 @@ class ServerApp(kivy.app.App):
         self.server_socket_box_layout = kivy.uix.boxlayout.BoxLayout(
             orientation="horizontal"
         )
-
         self.server_socket_box_layout.add_widget(self.server_ip)
         self.server_socket_box_layout.add_widget(self.server_port)
 
@@ -79,16 +82,19 @@ class ServerApp(kivy.app.App):
             text="Bind Socket", 
             disabled=True
         )
+        self.bind_btn.bind(on_press=self.bind_socket)
 
         self.listen_btn = kivy.uix.button.Button(
             text="Listen to Connections", 
             disabled=True
         )
+        self.listen_btn.bind(on_press=self.listen_accept)
 
         self.close_socket_btn = kivy.uix.button.Button(
             text="Close Socket", 
             disabled=True
         )
+        self.close_socket_btn.bind(on_press=self.close_socket)
 
         self.label = kivy.uix.label.Label(
             text="Socket Status"
