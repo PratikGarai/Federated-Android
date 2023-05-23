@@ -24,7 +24,7 @@ Pygments==2.10.0
 pypiwin32==223
 pytoml==0.1.21
 pywin32==301
-requests==2.26.0
+requests==2.31.0
 sh==1.14.2
 six==1.16.0
 toml==0.10.2
