@@ -20,7 +20,7 @@ pep517==0.6.0
 pexpect==4.8.0
 platformdirs==2.2.0
 ptyprocess==0.7.0
-Pygments==2.10.0
+Pygments==2.15.0
 pypiwin32==223
 pytoml==0.1.21
 pywin32==301
